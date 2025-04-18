@@ -12,6 +12,7 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
 let mapEvent;
+let map;
 
 // How Geolocation works
 navigator.geolocation.getCurrentPosition(
@@ -19,7 +20,7 @@ navigator.geolocation.getCurrentPosition(
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     const coords = [latitude, longitude]; // its setting the localisation coordinates
-    const map = L.map('map').setView(coords, 13); // 13 is representing zoom it and out option
+    map = L.map('map').setView(coords, 13); // 13 is representing zoom it and out option
 
     // L.titleLayer add a tile layer to add to our map, in this case it’s a OpenStreetMap tile layer.
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -33,6 +34,7 @@ navigator.geolocation.getCurrentPosition(
       // mapevent conatines all data regarding pointclick on map
       mapEvent = mapE;
       form.classList.remove('hidden');
+      inputDistance.focus();
     });
   },
 
@@ -43,7 +45,7 @@ navigator.geolocation.getCurrentPosition(
 
 form.addEventListener('submit', function (e) {
   e.preventDefault();
-
+  console.log(mapEvent);
   const { lat, lng } = mapEvent.latlng;
   // Steps of creation marker withpopup
   // 1) We create a marker object
@@ -65,4 +67,13 @@ form.addEventListener('submit', function (e) {
     )
     .setPopupContent('Workout')
     .openPopup(); // L.popup({}) set object of popup which we can modify
+
+  const inputDuration = document.querySelector('.form__input--duration');
+  inputDistance.value =
+    inputDuration.value =
+    inputCadence.value =
+    inputElevation.value =
+      '';
 });
+
+//Changing the type of workput and its form
