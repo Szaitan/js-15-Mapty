@@ -43,6 +43,7 @@ navigator.geolocation.getCurrentPosition(
   }
 );
 
+// Event which
 form.addEventListener('submit', function (e) {
   e.preventDefault();
   console.log(mapEvent);
@@ -75,7 +76,7 @@ form.addEventListener('submit', function (e) {
     inputElevation.value =
       '';
 });
-
+true;
 //Changing the type of workput and its form
 inputType.addEventListener('change', function () {
   inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
