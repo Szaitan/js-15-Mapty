@@ -29,7 +29,7 @@ navigator.geolocation.getCurrentPosition(
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map); // addto is tageting specific div element from html by id
 
-    // Adding function to create markers when suer clicks on map
+    // Adding function to create markers when user clicks on map
     map.on('click', function (mapE) {
       // mapevent conatines all data regarding pointclick on map
       mapEvent = mapE;
