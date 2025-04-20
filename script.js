@@ -13,16 +13,16 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class APP {
   #workouts = [];
-  map;
+  #map;
+  #mapEvent;
+
   constructor() {
     this._getPosition();
   }
 
   _getPosition() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        this._loadMap(position);
-      });
+      navigator.geolocation.getCurrentPosition(this._loadMap.bind(this));
     } else {
       alert('Could not get your position.');
     }
@@ -32,22 +32,19 @@ class APP {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     const coords = [latitude, longitude];
-    map = L.map('map').setView(coords, 13);
+    this.#map = L.map('map').setView(coords, 13);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    }).addTo(this.#map);
 
-    map.on('click', mapEvent => {
-      this._showForm();
+    this.#map.on('click', mapE => {
+      this.#mapEvent = mapE;
+      form.classList.remove('hidden');
+      inputDistance.focus();
     });
-  }
-
-  _showForm() {
-    form.classList.remove('hidden');
-    inputDistance.focus();
   }
 }
 
