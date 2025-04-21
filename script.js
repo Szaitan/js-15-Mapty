@@ -39,13 +39,20 @@ class APP {
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.#map);
+    this._showForm();
+  }
 
+  _showForm() {
     this.#map.on('click', mapE => {
       this.#mapEvent = mapE;
       form.classList.remove('hidden');
       inputDistance.focus();
     });
   }
+
+  _toggleElevationField() {}
+
+  _newWorkout() {}
 }
 
 const app = new APP();
