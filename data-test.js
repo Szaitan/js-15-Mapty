@@ -76,40 +76,9 @@ form.addEventListener('submit', function (e) {
     inputElevation.value =
       '';
 });
-true;
+
 //Changing the type of workput and its form
 inputType.addEventListener('change', function () {
   inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
   inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
-
-class APP {
-  #workouts = [];
-  map;
-  constructor() {
-    this.#_getPosition();
-  }
-
-  #_getPosition() {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const coords = [latitude, longitude];
-      map = L.map('map').setView(coords, 13);
-
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(map);
-
-      map.on('click', function (mapE) {
-        mapEvent = mapE;
-        form.classList.remove('hidden');
-        inputDistance.focus();
-      });
-    });
-  }
-}
-
-const app = new APP();
