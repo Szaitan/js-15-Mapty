@@ -18,6 +18,9 @@ class APP {
 
   constructor() {
     this._getPosition();
+
+    inputType.addEventListener('change', this._toggleElevationField);
+    form.addEventListener('submit', this._newWorkout.bind(this));
   }
 
   _getPosition() {
@@ -50,9 +53,40 @@ class APP {
     });
   }
 
-  _toggleElevationField() {}
+  _toggleElevationField() {
+    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+  }
 
-  _newWorkout() {}
+  _newWorkout(e) {
+    e.preventDefault();
+    console.log(this.#mapEvent);
+    const { lat, lng } = this.#mapEvent.latlng;
+
+    const workout = L.marker([lat, lng])
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 50,
+          autoClose: false,
+          closeOnClick: false,
+          className: 'running-popup',
+        })
+      )
+      .setPopupContent('Workout')
+      .openPopup();
+
+    this.#workouts.push(workout);
+    console.log(this.#workouts);
+
+    const inputDuration = document.querySelector('.form__input--duration');
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
+  }
 }
 
 const app = new APP();
