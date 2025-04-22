@@ -60,10 +60,10 @@ class APP {
 
   _newWorkout(e) {
     e.preventDefault();
-    console.log(this.#mapEvent);
+    // console.log(this.#mapEvent);
     const { lat, lng } = this.#mapEvent.latlng;
 
-    const workout = L.marker([lat, lng])
+    const workoutMark = L.marker([lat, lng])
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -77,10 +77,33 @@ class APP {
       .setPopupContent('Workout')
       .openPopup();
 
+    let workout;
+    const workoutType = inputType.value;
+    const distance = Number(inputDistance.value);
+    const duration = Number(inputDuration.value);
+    const coords = [lat, lng];
+    const date = new Intl.DateTimeFormat(navigator.language).format(new Date());
+
+    if (workoutType === 'running') {
+      const cadance = inputCadence.value;
+      const pace = cadance / duration;
+      workout = new Running(distance, duration, coords, date, cadance, pace);
+    } else {
+      const elevationGain = inputElevation.value;
+      const speed = distance / duration;
+      workout = new Running(
+        distance,
+        duration,
+        coords,
+        date,
+        elevationGain,
+        speed
+      );
+    }
+
     this.#workouts.push(workout);
     console.log(this.#workouts);
 
-    const inputDuration = document.querySelector('.form__input--duration');
     inputDistance.value =
       inputDuration.value =
       inputCadence.value =
