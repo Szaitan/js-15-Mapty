@@ -89,4 +89,37 @@ class APP {
   }
 }
 
+class Workout {
+  #distance;
+  #duration;
+  #coords;
+  #date;
+  constructor(distance, duration, coords, date) {
+    this.#distance = distance;
+    this.#duration = duration;
+    this.#coords = coords;
+    this.#date = date;
+  }
+}
+
+class Running extends Workout {
+  #cadance;
+  #pace;
+  constructor(distance, duration, coords, date, cadance, pace) {
+    super(distance, duration, coords, date);
+    this.#cadance = cadance;
+    this.#pace = pace;
+  }
+}
+
+class Cycling extends Workout {
+  #elevationGain;
+  #speed;
+  constructor(distance, duration, coords, date, elevationGain, speed) {
+    super(distance, duration, coords, date);
+    this.#elevationGain = elevationGain;
+    this.#speed = speed;
+  }
+}
+
 const app = new APP();
