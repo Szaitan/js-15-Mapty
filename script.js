@@ -11,6 +11,56 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+class Workout {
+  #distance;
+  #duration;
+  #coords;
+  #date;
+  #id;
+  constructor(distance, duration, coords) {
+    this.#id = new Date();
+    this.#date = new Date();
+    this.#distance = distance;
+    this.#duration = duration;
+    this.#coords = coords;
+  }
+
+  get distance() {
+    return this.#distance;
+  }
+  get duration() {
+    return this.#duration;
+  }
+}
+
+class Running extends Workout {
+  #cadance;
+  #pace;
+  constructor(distance, duration, coords, cadance) {
+    super(distance, duration, coords);
+    this.#cadance = cadance;
+    this.#calclPace();
+  }
+  #calclPace() {
+    this.#pace = this.duration / this.distance;
+    return this.#pace;
+  }
+}
+
+class Cycling extends Workout {
+  #elevationGain;
+  #speed;
+  constructor(distance, duration, coords, elevationGain) {
+    super(distance, duration, coords);
+    this.#elevationGain = elevationGain;
+    this.#speed = this.#calcSpeed();
+  }
+
+  #calcSpeed() {
+    return this.distance / this.duration / 60;
+  }
+}
+
 class APP {
   #workouts = [];
   #map;
@@ -79,26 +129,17 @@ class APP {
 
     let workout;
     const workoutType = inputType.value;
+    console.log(workoutType);
     const distance = Number(inputDistance.value);
     const duration = Number(inputDuration.value);
     const coords = [lat, lng];
-    const date = new Intl.DateTimeFormat(navigator.language).format(new Date());
 
     if (workoutType === 'running') {
       const cadance = inputCadence.value;
-      const pace = cadance / duration;
-      workout = new Running(distance, duration, coords, date, cadance, pace);
+      workout = new Running(distance, duration, coords, cadance);
     } else {
       const elevationGain = inputElevation.value;
-      const speed = distance / duration;
-      workout = new Running(
-        distance,
-        duration,
-        coords,
-        date,
-        elevationGain,
-        speed
-      );
+      workout = new Cycling(distance, duration, coords, elevationGain);
     }
 
     this.#workouts.push(workout);
@@ -109,39 +150,6 @@ class APP {
       inputCadence.value =
       inputElevation.value =
         '';
-  }
-}
-
-class Workout {
-  #distance;
-  #duration;
-  #coords;
-  #date;
-  constructor(distance, duration, coords, date) {
-    this.#distance = distance;
-    this.#duration = duration;
-    this.#coords = coords;
-    this.#date = date;
-  }
-}
-
-class Running extends Workout {
-  #cadance;
-  #pace;
-  constructor(distance, duration, coords, date, cadance, pace) {
-    super(distance, duration, coords, date);
-    this.#cadance = cadance;
-    this.#pace = pace;
-  }
-}
-
-class Cycling extends Workout {
-  #elevationGain;
-  #speed;
-  constructor(distance, duration, coords, date, elevationGain, speed) {
-    super(distance, duration, coords, date);
-    this.#elevationGain = elevationGain;
-    this.#speed = speed;
   }
 }
 
