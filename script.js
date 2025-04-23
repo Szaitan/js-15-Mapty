@@ -11,6 +11,11 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+if (inputType.value === 'cycling') {
+  inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+}
+
 class Workout {
   #distance;
   #duration;
@@ -139,6 +144,7 @@ class APP {
       workout = new Running(distance, duration, coords, cadance);
     } else {
       const elevationGain = inputElevation.value;
+      console.log(elevationGain);
       workout = new Cycling(distance, duration, coords, elevationGain);
     }
 
