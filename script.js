@@ -116,9 +116,41 @@ class APP {
   _newWorkout(e) {
     e.preventDefault();
     // console.log(this.#mapEvent);
-    const { lat, lng } = this.#mapEvent.latlng;
+    const allData = [
+      inputDistance,
+      inputDuration,
+      inputCadence,
+      inputElevation,
+    ];
+    const allDataName = [''];
 
-    const workoutMark = L.marker([lat, lng])
+    allData.forEach(function (ele) {});
+
+    if (ele.value === '') {
+      alert(`${ele.value} canot be empty.`);
+    } else if (ele.value < 0) {
+      alert(`${ele.value} can't be lower than 0.`);
+    } else {
+    }
+
+    console.log('test');
+    let workout;
+    const { lat, lng } = this.#mapEvent.latlng;
+    const workoutType = inputType.value;
+    const distance = Number(inputDistance.value);
+    const duration = Number(inputDuration.value);
+    const coords = [lat, lng];
+    const cadance = inputCadence.value;
+    const elevationGain = inputElevation.value;
+
+    if (workoutType === 'running') {
+      workout = new Running(distance, duration, coords, cadance);
+    } else {
+      workout = new Cycling(distance, duration, coords, elevationGain);
+    }
+
+    // Creating marker on map
+    L.marker([lat, lng])
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -131,22 +163,6 @@ class APP {
       )
       .setPopupContent('Workout')
       .openPopup();
-
-    let workout;
-    const workoutType = inputType.value;
-    console.log(workoutType);
-    const distance = Number(inputDistance.value);
-    const duration = Number(inputDuration.value);
-    const coords = [lat, lng];
-
-    if (workoutType === 'running') {
-      const cadance = inputCadence.value;
-      workout = new Running(distance, duration, coords, cadance);
-    } else {
-      const elevationGain = inputElevation.value;
-      console.log(elevationGain);
-      workout = new Cycling(distance, duration, coords, elevationGain);
-    }
 
     this.#workouts.push(workout);
     console.log(this.#workouts);
