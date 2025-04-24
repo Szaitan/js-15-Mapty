@@ -179,9 +179,11 @@ class APP {
         .setPopupContent('Workout')
         .openPopup();
 
+      // Adding data to list
       this.#workouts.push(workout);
       console.log(this.#workouts);
 
+      // Clearing the fileds from data
       inputDistance.value =
         inputDuration.value =
         inputCadence.value =
