@@ -17,12 +17,14 @@ class Workout {
   #coords;
   #date;
   #id;
-  constructor(distance, duration, coords) {
+
+  constructor(distance, duration, coords, type) {
     this.#id = new Date();
     this.#date = new Date();
     this.#distance = distance;
     this.#duration = duration;
     this.#coords = coords;
+    this.type = type;
   }
 
   get distance() {
@@ -31,13 +33,17 @@ class Workout {
   get duration() {
     return this.#duration;
   }
+
+  get coords() {
+    return this.#coords;
+  }
 }
 
 class Running extends Workout {
   #cadance;
   #pace;
-  constructor(distance, duration, coords, cadance) {
-    super(distance, duration, coords);
+  constructor(distance, duration, coords, cadance, type) {
+    super(distance, duration, coords, type);
     this.#cadance = cadance;
     this.#calclPace();
   }
@@ -50,8 +56,8 @@ class Running extends Workout {
 class Cycling extends Workout {
   #elevationGain;
   #speed;
-  constructor(distance, duration, coords, elevationGain) {
-    super(distance, duration, coords);
+  constructor(distance, duration, coords, elevationGain, type) {
+    super(distance, duration, coords, type);
     this.#elevationGain = elevationGain;
     this.#speed = this.#calcSpeed();
   }
@@ -159,29 +165,22 @@ class APP {
       const elevationGain = inputElevation.value;
 
       if (workoutType === 'running') {
-        workout = new Running(distance, duration, coords, cadance);
+        workout = new Running(distance, duration, coords, cadance, workoutType);
       } else {
-        workout = new Cycling(distance, duration, coords, elevationGain);
+        workout = new Cycling(
+          distance,
+          duration,
+          coords,
+          elevationGain,
+          workoutType
+        );
       }
 
       // Creating marker on map
-      L.marker([lat, lng])
-        .addTo(this.#map)
-        .bindPopup(
-          L.popup({
-            maxWidth: 250,
-            minWidth: 50,
-            autoClose: false,
-            closeOnClick: false,
-            className: 'running-popup',
-          })
-        )
-        .setPopupContent('Workout')
-        .openPopup();
+      this._renderWorkoutMarker(workout);
 
       // Adding data to list
       this.#workouts.push(workout);
-      console.log(this.#workouts);
 
       // Clearing the fileds from data
       inputDistance.value =
@@ -190,6 +189,22 @@ class APP {
         inputElevation.value =
           '';
     }
+  }
+
+  _renderWorkoutMarker(obj) {
+    L.marker(obj.coords)
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 50,
+          autoClose: false,
+          closeOnClick: false,
+          className: `${obj.type}-popup`,
+        })
+      )
+      .setPopupContent(`${obj.type}`)
+      .openPopup();
   }
 }
 
