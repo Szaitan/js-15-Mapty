@@ -87,7 +87,7 @@ class APP {
       alert('Could not get your position.');
     }
   }
-
+  test;
   _loadMap(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
