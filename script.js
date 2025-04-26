@@ -20,7 +20,7 @@ class Workout {
 
   constructor(distance, duration, coords, type) {
     this.#id = new Date();
-    this.#date = Date.now();
+    this.#date = new Date();
     this.#distance = distance;
     this.#duration = duration;
     this.#coords = coords;
@@ -33,11 +33,9 @@ class Workout {
   get duration() {
     return this.#duration;
   }
-
   get coords() {
     return this.#coords;
   }
-
   get date() {
     return this.#date;
   }
@@ -49,12 +47,11 @@ class Running extends Workout {
   constructor(distance, duration, coords, cadance, type) {
     super(distance, duration, coords, type);
     this.#cadance = cadance;
-    this.#calclPace();
+    this.#pace = this.#calclPace().toFixed(2);
   }
 
   #calclPace() {
-    this.#pace = this.duration / this.distance;
-    return this.#pace;
+    return this.duration / this.distance;
   }
 
   get pace() {
@@ -68,7 +65,7 @@ class Cycling extends Workout {
   constructor(distance, duration, coords, elevationGain, type) {
     super(distance, duration, coords, type);
     this.#elevationGain = elevationGain;
-    this.#speed = this.#calcSpeed();
+    this.#speed = this.#calcSpeed().toFixed(2);
   }
 
   #calcSpeed() {
@@ -226,6 +223,11 @@ class APP {
   _renderWorkoutList(obj) {
     let icon;
     let paceOrSpeed;
+    const displayDate = new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      day: 'numeric',
+    }).format(obj.date);
+
     if (obj.type === 'running') {
       icon = `<span class="workout__icon">🏃‍♂️</span>`;
       paceOrSpeed = `<div class="workout__details">
@@ -241,10 +243,10 @@ class APP {
           <span class="workout__unit">m</span>
         </div>`;
     }
-    // <h2 class="workout__title">Running on ${obj.date.getMonth()} ${obj.date.getDate()}</h2>
+
     const html = `
       <li class="workout workout--${obj.type}" data-id="${obj.date}">
-        <h2 class="workout__title">Running on 0</h2>
+       <h2 class="workout__title">Running on ${displayDate}</h2>
         <div class="workout__details">
           ${icon}
           <span class="workout__value">${obj.distance}</span>
