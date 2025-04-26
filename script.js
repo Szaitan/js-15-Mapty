@@ -37,6 +37,10 @@ class Workout {
   get coords() {
     return this.#coords;
   }
+
+  get date() {
+    return this.#date;
+  }
 }
 
 class Running extends Workout {
@@ -47,9 +51,14 @@ class Running extends Workout {
     this.#cadance = cadance;
     this.#calclPace();
   }
+
   #calclPace() {
     this.#pace = this.duration / this.distance;
     return this.#pace;
+  }
+
+  get pace() {
+    return this.$pace;
   }
 }
 
@@ -64,6 +73,10 @@ class Cycling extends Workout {
 
   #calcSpeed() {
     return this.distance / this.duration / 60;
+  }
+
+  get speed() {
+    return this.#speed;
   }
 }
 
@@ -87,7 +100,7 @@ class APP {
       alert('Could not get your position.');
     }
   }
-  test;
+
   _loadMap(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
@@ -205,6 +218,45 @@ class APP {
       )
       .setPopupContent(`${obj.type}`)
       .openPopup();
+  }
+
+  _renderWorkoutList(obj) {
+    if (obj.type === 'running') {
+      const icon = `<span class="workout__icon">🏃‍♂️</span>`;
+      const paceOrSpeed = `<div class="workout__details">
+          <span class="workout__icon">🦶🏼</span>
+          <span class="workout__value">${obj.speed}</span>
+          <span class="workout__unit">spm</span>
+        </div>`;
+    } else {
+    }
+
+    const html = `
+      <li class="workout workout--${obj.type}" data-id="1234567890">
+        <h2 class="workout__title">Running on ${obj.date.getMonth()} ${obj.date.getDate()}</h2>
+        <div class="workout__details">
+        
+          <span class="workout__icon">🏃‍♂️</span>
+          <span class="workout__value">5.2</span>
+          <span class="workout__unit">km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⏱</span>
+          <span class="workout__value">24</span>
+          <span class="workout__unit">min</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⚡️</span>
+          <span class="workout__value">4.6</span>
+          <span class="workout__unit">min/km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">🦶🏼</span>
+          <span class="workout__value">178</span>
+          <span class="workout__unit">spm</span>
+        </div>
+      </li>
+    `;
   }
 }
 
