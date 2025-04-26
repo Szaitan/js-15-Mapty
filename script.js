@@ -265,7 +265,7 @@ class APP {
         ${paceOrSpeed}
       </li>
     `;
-    containerWorkouts.insertAdjacentHTML('beforeend', html);
+    form.insertAdjacentHTML('afterend', html);
   }
 }
 
