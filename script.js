@@ -20,7 +20,7 @@ class Workout {
 
   constructor(distance, duration, coords, type) {
     this.#id = new Date();
-    this.#date = new Date();
+    this.#date = Date.now();
     this.#distance = distance;
     this.#duration = duration;
     this.#coords = coords;
@@ -195,6 +195,9 @@ class APP {
       // Adding data to list
       this.#workouts.push(workout);
 
+      // Passing workout to our list
+      this._renderWorkoutList(workout);
+
       // Clearing the fileds from data
       inputDistance.value =
         inputDuration.value =
@@ -221,28 +224,35 @@ class APP {
   }
 
   _renderWorkoutList(obj) {
+    let icon;
+    let paceOrSpeed;
     if (obj.type === 'running') {
-      const icon = `<span class="workout__icon">🏃‍♂️</span>`;
-      const paceOrSpeed = `<div class="workout__details">
+      icon = `<span class="workout__icon">🏃‍♂️</span>`;
+      paceOrSpeed = `<div class="workout__details">
           <span class="workout__icon">🦶🏼</span>
-          <span class="workout__value">${obj.speed}</span>
+          <span class="workout__value">${obj.pace}</span>
           <span class="workout__unit">spm</span>
         </div>`;
     } else {
+      icon = `<span class="workout__icon">🚴‍♀️</span>`;
+      paceOrSpeed = `<div class="workout__details">
+          <span class="workout__icon">⛰</span>
+          <span class="workout__value">${obj.speed}</span>
+          <span class="workout__unit">m</span>
+        </div>`;
     }
-
+    // <h2 class="workout__title">Running on ${obj.date.getMonth()} ${obj.date.getDate()}</h2>
     const html = `
-      <li class="workout workout--${obj.type}" data-id="1234567890">
-        <h2 class="workout__title">Running on ${obj.date.getMonth()} ${obj.date.getDate()}</h2>
+      <li class="workout workout--${obj.type}" data-id="${obj.date}">
+        <h2 class="workout__title">Running on 0</h2>
         <div class="workout__details">
-        
-          <span class="workout__icon">🏃‍♂️</span>
-          <span class="workout__value">5.2</span>
+          ${icon}
+          <span class="workout__value">${obj.distance}</span>
           <span class="workout__unit">km</span>
         </div>
         <div class="workout__details">
           <span class="workout__icon">⏱</span>
-          <span class="workout__value">24</span>
+          <span class="workout__value">${obj.duration}</span>
           <span class="workout__unit">min</span>
         </div>
         <div class="workout__details">
@@ -250,13 +260,10 @@ class APP {
           <span class="workout__value">4.6</span>
           <span class="workout__unit">min/km</span>
         </div>
-        <div class="workout__details">
-          <span class="workout__icon">🦶🏼</span>
-          <span class="workout__value">178</span>
-          <span class="workout__unit">spm</span>
-        </div>
+        ${paceOrSpeed}
       </li>
     `;
+    containerWorkouts.insertAdjacentHTML('beforeend', html);
   }
 }
 
