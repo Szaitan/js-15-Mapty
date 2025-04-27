@@ -55,7 +55,7 @@ class Running extends Workout {
   }
 
   get pace() {
-    return this.$pace;
+    return this.#pace;
   }
 }
 
@@ -186,6 +186,7 @@ class APP {
         );
       }
 
+      console.log(workout.type);
       // Creating marker on map
       this._renderWorkoutMarker(workout);
 
@@ -201,6 +202,8 @@ class APP {
         inputCadence.value =
         inputElevation.value =
           '';
+
+      form.classList.add('hidden');
     }
   }
 
@@ -223,6 +226,7 @@ class APP {
   _renderWorkoutList(obj) {
     let icon;
     let paceOrSpeed;
+
     const displayDate = new Intl.DateTimeFormat('en-US', {
       month: 'long',
       day: 'numeric',
@@ -246,7 +250,9 @@ class APP {
 
     const html = `
       <li class="workout workout--${obj.type}" data-id="${obj.date}">
-       <h2 class="workout__title">Running on ${displayDate}</h2>
+       <h2 class="workout__title">${
+         obj.type[0].toUpperCase() + obj.type.slice(1)
+       } on ${displayDate}</h2>
         <div class="workout__details">
           ${icon}
           <span class="workout__value">${obj.distance}</span>
