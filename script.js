@@ -88,6 +88,7 @@ class APP {
 
     inputType.addEventListener('change', this._toggleElevationField.bind(this));
     form.addEventListener('submit', this._newWorkout.bind(this));
+    containerWorkouts.addEventListener('click', this.workoutFocus.bind(this));
   }
 
   _getPosition() {
