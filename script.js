@@ -19,12 +19,16 @@ class Workout {
   #id;
 
   constructor(distance, duration, coords, type) {
-    this.#id = new Date();
+    this.#id = Date.now();
     this.#date = new Date();
     this.#distance = distance;
     this.#duration = duration;
     this.#coords = coords;
     this.type = type;
+  }
+
+  get id() {
+    return this.#id;
   }
 
   get distance() {
@@ -88,7 +92,7 @@ class APP {
 
     inputType.addEventListener('change', this._toggleElevationField.bind(this));
     form.addEventListener('submit', this._newWorkout.bind(this));
-    containerWorkouts.addEventListener('click', this.workoutFocus.bind(this));
+    containerWorkouts.addEventListener('click', this._workoutFocus.bind(this));
   }
 
   _getPosition() {
@@ -250,7 +254,7 @@ class APP {
     }
 
     const html = `
-      <li class="workout workout--${obj.type}" data-id="${obj.date}">
+      <li class="workout workout--${obj.type}" data-id="${obj.id}">
        <h2 class="workout__title">${
          obj.type[0].toUpperCase() + obj.type.slice(1)
        } on ${displayDate}</h2>
@@ -273,6 +277,26 @@ class APP {
       </li>
     `;
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  // Focusing window on specific marker
+  _workoutFocus(e) {
+    const clickedWorkout = e.target.closest('.workout');
+
+    if (!clickedWorkout) {
+      return;
+    }
+    let targetWorkout;
+    this.#workouts.find(function (w) {
+      if (w.id === +clickedWorkout.dataset.id) {
+        targetWorkout = w;
+      }
+    });
+    // Function of leaflet to focus on specific coords on map
+    this.#map.setView(targetWorkout.coords, 13, {
+      animate: true,
+      pan: { duration: 1 },
+    });
   }
 }
 
