@@ -12,81 +12,43 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
 class Workout {
-  #distance;
-  #duration;
-  #coords;
-  #date;
-  #id;
-
   constructor(distance, duration, coords, type) {
-    this.#id = Date.now();
-    this.#date = new Date();
-    this.#distance = distance;
-    this.#duration = duration;
-    this.#coords = coords;
+    this.id = Date.now();
+    this.date = new Date();
+    this.distance = distance;
+    this.duration = duration;
+    this.coords = coords;
     this.type = type;
-  }
-
-  get id() {
-    return this.#id;
-  }
-
-  get distance() {
-    return this.#distance;
-  }
-  get duration() {
-    return this.#duration;
-  }
-  get coords() {
-    return this.#coords;
-  }
-  get date() {
-    return this.#date;
   }
 }
 
 class Running extends Workout {
-  #cadance;
-  #pace;
   constructor(distance, duration, coords, cadance, type) {
     super(distance, duration, coords, type);
-    this.#cadance = cadance;
-    this.#pace = this.#calclPace().toFixed(2);
+    this.cadance = cadance;
+    this.pace = this.calclPace().toFixed(2);
   }
 
-  #calclPace() {
+  calclPace() {
     return this.duration / this.distance;
-  }
-
-  get pace() {
-    return this.#pace;
   }
 }
 
 class Cycling extends Workout {
-  #elevationGain;
-  #speed;
   constructor(distance, duration, coords, elevationGain, type) {
     super(distance, duration, coords, type);
-    this.#elevationGain = elevationGain;
-    this.#speed = this.#calcSpeed().toFixed(2);
+    this.elevationGain = elevationGain;
+    this.speed = this.calcSpeed().toFixed(2);
   }
 
-  #calcSpeed() {
+  calcSpeed() {
     return this.distance / this.duration / 60;
-  }
-
-  get speed() {
-    return this.#speed;
   }
 }
 
 class APP {
-  #workouts = [];
-  #map;
-  #mapEvent;
-
   constructor() {
+    this.workouts = [];
     this.runTurn = true;
     this._getPosition();
 
@@ -107,19 +69,27 @@ class APP {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     const coords = [latitude, longitude];
-    this.#map = L.map('map').setView(coords, 13);
+    this.map = L.map('map').setView(coords, 13);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(this.#map);
+    }).addTo(this.map);
+
+    this._getLocalStorage();
+
     this._showForm();
+
+    this.workouts.forEach(element => {
+      console.log(element.cords);
+      this._renderWorkoutMarker(element);
+    });
   }
 
   _showForm() {
-    this.#map.on('click', mapE => {
-      this.#mapEvent = mapE;
+    this.map.on('click', mapE => {
+      this.mapEvent = mapE;
       form.classList.remove('hidden');
       inputDistance.focus();
     });
@@ -171,7 +141,7 @@ class APP {
 
     if (forward) {
       let workout;
-      const { lat, lng } = this.#mapEvent.latlng;
+      const { lat, lng } = this.mapEvent.latlng;
       const workoutType = inputType.value;
       const distance = Number(inputDistance.value);
       const duration = Number(inputDuration.value);
@@ -191,15 +161,16 @@ class APP {
         );
       }
 
-      console.log(workout.type);
       // Creating marker on map
       this._renderWorkoutMarker(workout);
 
       // Adding data to list
-      this.#workouts.push(workout);
+      this.workouts.push(workout);
 
       // Passing workout to our list
       this._renderWorkoutList(workout);
+
+      this._setLocalStorage();
 
       // Clearing the fileds from data
       inputDistance.value =
@@ -213,8 +184,9 @@ class APP {
   }
 
   _renderWorkoutMarker(obj) {
+    console.log('test');
     L.marker(obj.coords)
-      .addTo(this.#map)
+      .addTo(this.map)
       .bindPopup(
         L.popup({
           maxWidth: 250,
@@ -231,11 +203,11 @@ class APP {
   _renderWorkoutList(obj) {
     let icon;
     let paceOrSpeed;
+    console.log(obj.date);
 
-    const displayDate = new Intl.DateTimeFormat('en-US', {
-      month: 'long',
-      day: 'numeric',
-    }).format(obj.date);
+    const displayDate = `${obj.date.getDate()} of ${
+      months[obj.date.getMonth()]
+    }`;
 
     if (obj.type === 'running') {
       icon = `<span class="workout__icon">🏃‍♂️</span>`;
@@ -287,15 +259,32 @@ class APP {
       return;
     }
     let targetWorkout;
-    this.#workouts.find(function (w) {
+    this.workouts.find(function (w) {
       if (w.id === +clickedWorkout.dataset.id) {
         targetWorkout = w;
       }
     });
     // Function of leaflet to focus on specific coords on map
-    this.#map.setView(targetWorkout.coords, 13, {
+    this.map.setView(targetWorkout.coords, 13, {
       animate: true,
       pan: { duration: 1 },
+    });
+  }
+
+  // Setting local storage
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.workouts));
+  }
+
+  _getLocalStorage() {
+    const storageData = JSON.parse(localStorage.getItem('workouts'));
+
+    if (!storageData) return;
+    this.workouts = storageData;
+
+    storageData.forEach(element => {
+      element.date = new Date(element.date);
+      this._renderWorkoutList(element);
     });
   }
 }
