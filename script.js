@@ -82,7 +82,6 @@ class APP {
     this._showForm();
 
     this.workouts.forEach(element => {
-      console.log(element.cords);
       this._renderWorkoutMarker(element);
     });
   }
@@ -184,7 +183,6 @@ class APP {
   }
 
   _renderWorkoutMarker(obj) {
-    console.log('test');
     L.marker(obj.coords)
       .addTo(this.map)
       .bindPopup(
@@ -203,7 +201,6 @@ class APP {
   _renderWorkoutList(obj) {
     let icon;
     let paceOrSpeed;
-    console.log(obj.date);
 
     const displayDate = `${obj.date.getDate()} of ${
       months[obj.date.getMonth()]
