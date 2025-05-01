@@ -269,11 +269,13 @@ class APP {
   }
 
   // Setting local storage
+  // We have to use JSON stringify to change obj into striong to save it
   _setLocalStorage() {
     localStorage.setItem('workouts', JSON.stringify(this.workouts));
   }
 
   _getLocalStorage() {
+    // We are using JSON parse to make form string object again
     const storageData = JSON.parse(localStorage.getItem('workouts'));
 
     if (!storageData) return;
