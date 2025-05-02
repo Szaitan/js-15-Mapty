@@ -248,7 +248,7 @@ class APP {
     form.insertAdjacentHTML('afterend', html);
   }
 
-  // Focusing window on specific marker !!!
+  // Focusing window on specific marker
   _workoutFocus(e) {
     const clickedWorkout = e.target.closest('.workout');
 
