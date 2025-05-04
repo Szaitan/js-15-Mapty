@@ -299,3 +299,5 @@ if (inputType.value === 'cycling') {
   inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   app.runTurn = !app.runTurn;
 }
+
+//test
